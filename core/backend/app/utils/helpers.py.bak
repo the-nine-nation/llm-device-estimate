@@ -1,0 +1,291 @@
+"""
+辅助函数
+"""
+
+from typing import Dict, List, Any, Optional, Tuple
+import math
+from ..models.common import GPUInfo, ModelSize
+from .constants import GPU_SPECS
+
+
+def format_memory_size(memory_gb: float) -> str:
+    """
+    格式化内存大小显示
+    
+    Args:
+        memory_gb: 内存大小（GB）
+        
+    Returns:
+        格式化后的字符串
+    """
+    if memory_gb < 1:
+        return f"{memory_gb * 1024:.1f} MB"
+    elif memory_gb < 1024:
+        return f"{memory_gb:.2f} GB"
+    else:
+        return f"{memory_gb / 1024:.2f} TB"
+
+
+def format_parameter_count(params: int) -> str:
+    """
+    格式化参数数量显示
+    
+    Args:
+        params: 参数数量
+        
+    Returns:
+        格式化后的字符串
+    """
+    if params < 1e6:
+        return f"{params / 1e3:.1f}K"
+    elif params < 1e9:
+        return f"{params / 1e6:.1f}M"
+    else:
+        return f"{params / 1e9:.1f}B"
+
+
+def calculate_model_size_category(params: int) -> ModelSize:
+    """
+    根据参数数量计算模型规模类别
+    
+    Args:
+        params: 参数数量
+        
+    Returns:
+        模型规模类别
+    """
+    if params < 1e9:  # < 1B
+        return ModelSize.SMALL
+    elif params < 10e9:  # < 10B
+        return ModelSize.MEDIUM
+    elif params < 100e9:  # < 100B
+        return ModelSize.LARGE
+    else:  # >= 100B
+        return ModelSize.XLARGE
+
+
+def recommend_gpus(memory_requirement_gb: float, max_count: int = 8, 
+                  use_case: str = "training") -> List[GPUInfo]:
+    """
+    根据内存需求推荐GPU
+    
+    Args:
+        memory_requirement_gb: 内存需求（GB）
+        max_count: 最大推荐数量
+        use_case: 使用场景 ("training" 或 "inference")
+        
+    Returns:
+        推荐的GPU列表
+    """
+    recommendations = []
+    
+    # 获取所有GPU选项，包括多卡配置
+    for gpu_name, specs in GPU_SPECS.items():
+        gpu_memory = specs["memory_gb"]
+        
+        # 单卡配置
+        if gpu_memory >= memory_requirement_gb:
+            gpu_info = GPUInfo(
+                name=gpu_name,
+                memory_gb=gpu_memory,
+                memory_bandwidth_gb_s=specs["memory_bandwidth_gb_s"],
+                compute_capability=specs["compute_capability"],
+                tensor_cores=specs["tensor_cores"],
+                price_usd=specs.get("price_usd")
+            )
+            recommendations.append(gpu_info)
+        
+        # 多卡配置（2-8卡）
+        for card_count in [2, 4, 8]:
+            total_memory = gpu_memory * card_count
+            if total_memory >= memory_requirement_gb and card_count <= 8:
+                multi_gpu_name = f"{card_count}x {gpu_name}"
+                total_price = specs.get("price_usd", 0) * card_count if specs.get("price_usd") else None
+                
+                gpu_info = GPUInfo(
+                    name=multi_gpu_name,
+                    memory_gb=total_memory,
+                    memory_bandwidth_gb_s=specs["memory_bandwidth_gb_s"] * card_count,
+                    compute_capability=specs["compute_capability"],
+                    tensor_cores=specs["tensor_cores"],
+                    price_usd=total_price
+                )
+                recommendations.append(gpu_info)
+    
+    # 按性价比和适用性排序
+    def sort_key(gpu: GPUInfo) -> float:
+        # 内存利用率评分
+        memory_utilization = min(1.0, memory_requirement_gb / gpu.memory_gb)
+        
+        # 性价比评分
+        if gpu.price_usd:
+            cost_efficiency = gpu.memory_gb / gpu.price_usd
+        else:
+            cost_efficiency = gpu.memory_gb
+        
+        # 根据使用场景调整权重
+        if use_case == "inference":
+            # 推理更看重单卡性能和低延迟
+            if "x" not in gpu.name:  # 单卡优先
+                return memory_utilization * 0.7 + cost_efficiency * 0.3 + 0.2
+            else:
+                return memory_utilization * 0.7 + cost_efficiency * 0.3
+        else:
+            # 训练更看重总内存和成本效率
+            return memory_utilization * 0.5 + cost_efficiency * 0.5
+    
+    recommendations.sort(key=sort_key, reverse=True)
+    
+    # 去重并限制数量
+    seen_configs = set()
+    unique_recommendations = []
+    for gpu in recommendations:
+        config_key = (gpu.name, gpu.memory_gb)
+        if config_key not in seen_configs:
+            seen_configs.add(config_key)
+            unique_recommendations.append(gpu)
+            if len(unique_recommendations) >= max_count:
+                break
+    
+    return unique_recommendations
+
+
+def calculate_gpu_count_options(total_memory_gb: float) -> Dict[str, int]:
+    """
+    计算不同GPU配置下的数量需求
+    
+    Args:
+        total_memory_gb: 总内存需求（GB）
+        
+    Returns:
+        GPU配置选项字典
+    """
+    options = {}
+    
+    for gpu_name, specs in GPU_SPECS.items():
+        gpu_memory = specs["memory_gb"]
+        # 预留10%内存用于系统开销
+        usable_memory = gpu_memory * 0.9
+        required_count = math.ceil(total_memory_gb / usable_memory)
+        options[gpu_name] = required_count
+    
+    return options
+
+
+def estimate_training_time(tokens_per_second: float, total_tokens: int, 
+                          epochs: int = 1) -> Tuple[str, Dict[str, float]]:
+    """
+    估算训练时间
+    
+    Args:
+        tokens_per_second: 处理速度（tokens/s）
+        total_tokens: 总token数
+        epochs: 训练轮数
+        
+    Returns:
+        (时间描述, 详细时间字典)
+    """
+    total_seconds = (total_tokens * epochs) / tokens_per_second
+    
+    hours = total_seconds / 3600
+    days = hours / 24
+    
+    time_breakdown = {
+        "seconds": total_seconds,
+        "minutes": total_seconds / 60,
+        "hours": hours,
+        "days": days
+    }
+    
+    if days >= 1:
+        description = f"{days:.1f} 天"
+    elif hours >= 1:
+        description = f"{hours:.1f} 小时"
+    else:
+        description = f"{total_seconds / 60:.1f} 分钟"
+    
+    return description, time_breakdown
+
+
+def calculate_cost_estimate(gpu_count: int, gpu_name: str, training_hours: float) -> Optional[float]:
+    """
+    估算训练成本
+    
+    Args:
+        gpu_count: GPU数量
+        gpu_name: GPU型号
+        training_hours: 训练小时数
+        
+    Returns:
+        估算成本（USD），如果没有价格信息则返回None
+    """
+    if gpu_name not in GPU_SPECS:
+        return None
+    
+    gpu_specs = GPU_SPECS[gpu_name]
+    if "price_usd" not in gpu_specs:
+        return None
+    
+    # 假设云服务价格为GPU价格的1/1000每小时（粗略估算）
+    hourly_rate = gpu_specs["price_usd"] / 1000
+    total_cost = gpu_count * hourly_rate * training_hours
+    
+    return total_cost
+
+
+def optimize_batch_size(model_params: int, sequence_length: int, 
+                       target_memory_gb: float) -> int:
+    """
+    根据内存限制优化批次大小
+    
+    Args:
+        model_params: 模型参数数量
+        sequence_length: 序列长度
+        target_memory_gb: 目标内存限制（GB）
+        
+    Returns:
+        推荐的批次大小
+    """
+    # 粗略估算：每个样本的激活值内存约为 seq_len * hidden_size * 4 bytes
+    # 这里使用经验公式
+    hidden_size = int(math.sqrt(model_params / 32))  # 粗略估算
+    memory_per_sample_gb = (sequence_length * hidden_size * 4) / (1024**3)
+    
+    # 预留50%内存用于其他用途
+    available_memory = target_memory_gb * 0.5
+    max_batch_size = int(available_memory / memory_per_sample_gb)
+    
+    # 确保批次大小在合理范围内
+    return max(1, min(max_batch_size, 128))
+
+
+def get_parallel_strategy_recommendation(model_params: int, gpu_count: int) -> Dict[str, int]:
+    """
+    推荐并行策略
+    
+    Args:
+        model_params: 模型参数数量
+        gpu_count: GPU数量
+        
+    Returns:
+        并行策略推荐
+    """
+    strategy = {
+        "data_parallel": gpu_count,
+        "tensor_parallel": 1,
+        "pipeline_parallel": 1
+    }
+    
+    # 大模型建议使用张量并行
+    if model_params > 10e9 and gpu_count >= 2:
+        if gpu_count >= 8:
+            strategy["tensor_parallel"] = 8
+            strategy["data_parallel"] = gpu_count // 8
+        elif gpu_count >= 4:
+            strategy["tensor_parallel"] = 4
+            strategy["data_parallel"] = gpu_count // 4
+        elif gpu_count >= 2:
+            strategy["tensor_parallel"] = 2
+            strategy["data_parallel"] = gpu_count // 2
+    
+    return strategy 

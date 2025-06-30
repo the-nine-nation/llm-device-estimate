@@ -1,0 +1,95 @@
+"""
+基础计算工具
+"""
+
+from typing import Dict, Any, Optional
+from enum import Enum
+
+from ...models.common import PrecisionType, ModelInfo
+
+
+class MemoryUnit(str, Enum):
+    """显存单位枚举"""
+    BYTES = "bytes"
+    KB = "kb"
+    MB = "mb"
+    GB = "gb"
+    TB = "tb"
+
+
+class BaseCalculator:
+    """基础计算器类"""
+    
+    # 精度对应的字节数
+    PRECISION_BYTES = {
+        PrecisionType.FP32: 4,
+        PrecisionType.FP16: 2,
+        PrecisionType.BF16: 2
+    }
+    
+    # 框架开销估算（GB）
+    FRAMEWORK_OVERHEAD = {
+        "pytorch": 1.5,
+        "transformers": 1.2,
+        "deepspeed": 2.0,
+        "default": 1.0
+    }
+    
+    def __init__(self):
+        """初始化基础计算器"""
+        pass
+    
+    def convert_bytes(self, bytes_value: float, from_unit: MemoryUnit = MemoryUnit.BYTES, 
+                     to_unit: MemoryUnit = MemoryUnit.GB) -> float:
+        """
+        显存单位转换
+        
+        Args:
+            bytes_value: 原始值
+            from_unit: 源单位
+            to_unit: 目标单位
+            
+        Returns:
+            转换后的值
+        """
+        # 转换系数
+        unit_multipliers = {
+            MemoryUnit.BYTES: 1,
+            MemoryUnit.KB: 1024,
+            MemoryUnit.MB: 1024 ** 2,
+            MemoryUnit.GB: 1024 ** 3,
+            MemoryUnit.TB: 1024 ** 4
+        }
+        
+        # 先转换为字节
+        bytes_val = bytes_value * unit_multipliers[from_unit]
+        # 再转换为目标单位
+        return bytes_val / unit_multipliers[to_unit]
+    
+    def calculate_model_memory(self, model: ModelInfo, precision: PrecisionType) -> float:
+        """
+        计算模型权重显存占用
+        
+        Args:
+            model: 模型信息
+            precision: 精度类型
+            
+        Returns:
+            模型权重显存占用（GB）
+        """
+        # 参数量 * 精度字节数
+        bytes_per_param = self.PRECISION_BYTES[precision]
+        total_bytes = model.parameters * bytes_per_param
+        return self.convert_bytes(total_bytes, MemoryUnit.BYTES, MemoryUnit.GB)
+    
+    def get_framework_overhead(self, framework: str = "default") -> float:
+        """
+        获取框架开销
+        
+        Args:
+            framework: 框架名称
+            
+        Returns:
+            框架开销（GB）
+        """
+        return self.FRAMEWORK_OVERHEAD.get(framework.lower(), self.FRAMEWORK_OVERHEAD["default"]) 

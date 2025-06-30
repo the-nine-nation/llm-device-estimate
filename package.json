@@ -1,0 +1,51 @@
+{
+  "name": "llm-resource-estimation-system",
+  "version": "1.0.0",
+  "description": "大语言模型训练与推理资源预估系统",
+  "main": "index.js",
+  "scripts": {
+    "start": "./start.sh",
+    "stop": "./stop.sh",
+    "restart": "npm run stop && npm start",
+    "clean": "./stop.sh --clean",
+    "dev": "npm start",
+    "backend": "cd core/backend && uv run python run_server.py",
+    "frontend": "cd core/front && npm run dev",
+    "backend:install": "cd core/backend && uv sync",
+    "frontend:install": "cd core/front && npm install",
+    "install:all": "npm run backend:install && npm run frontend:install",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd core/backend && uv run python -m pytest",
+    "test:frontend": "cd core/front && npm run test",
+    "lint": "npm run lint:frontend",
+    "lint:frontend": "cd core/front && npm run lint",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd core/front && npm run build",
+    "logs": "tail -f logs/backend.log logs/frontend.log",
+    "logs:backend": "tail -f logs/backend.log",
+    "logs:frontend": "tail -f logs/frontend.log",
+    "status": "curl -s http://localhost:8787/health && curl -s http://localhost:3000 > /dev/null && echo 'Services are running' || echo 'Services are not running'",
+    "setup": "chmod +x start.sh stop.sh && npm run install:all"
+  },
+  "keywords": [
+    "llm",
+    "training",
+    "inference",
+    "resource-estimation",
+    "gpu",
+    "machine-learning",
+    "ai"
+  ],
+  "author": "LLM Resource Estimation Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/llm-resource-estimation"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+} 

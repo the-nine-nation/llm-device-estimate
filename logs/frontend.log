@@ -1,0 +1,24 @@
+
+> llm-resource-estimation-frontend@0.1.0 dev
+> next dev -H 0.0.0.0
+
+  ▲ Next.js 14.2.30
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+
+ ✓ Starting...
+ ⚠ Invalid next.config.js options detected: 
+ ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+ ✓ Ready in 3.6s
+ ○ Compiling / ...
+ ✓ Compiled / in 766ms (562 modules)
+ GET / 200 in 868ms
+ ✓ Compiled in 122ms (280 modules)
+ GET / 200 in 43ms
+ ⚠ Cross origin request detected from 172.27.100.132 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /training in 339ms (754 modules)
+(node:92826) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[?25h

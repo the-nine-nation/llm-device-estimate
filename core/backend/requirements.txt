@@ -1,0 +1,24 @@
+# 核心依赖
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# 数据处理
+numpy>=1.24.3
+pandas>=2.0.3
+
+# 文件上传和表单处理
+python-multipart>=0.0.6
+
+# 安全和认证（可选）
+python-jose[cryptography]>=3.3.0
+
+# 开发依赖
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.25.0
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.7.0 
