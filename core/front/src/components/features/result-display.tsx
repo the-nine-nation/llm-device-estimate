@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { HelpIcon } from '@/components/ui/tooltip'
+import { Donate } from '@/components/ui/donate'
 import { formatMemorySize, formatNumber } from '@/lib/utils'
 import { TrainingResponse, InferenceResponse, GPUInfo } from '@/types/api'
 
@@ -336,6 +337,9 @@ export function TrainingResult({ result }: TrainingResultProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* 赞赏码 */}
+      <Donate className="mt-6" />
     </div>
   )
 }
@@ -467,6 +471,9 @@ export function InferenceResult({ result }: InferenceResultProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* 赞赏码 */}
+      <Donate className="mt-6" />
     </div>
   )
 } 

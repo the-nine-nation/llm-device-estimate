@@ -1,19 +1,23 @@
 INFO:     Will watch for changes in these directories: ['/Volumes/AppData/guanan/Item/LLM-device/core/backend']
 INFO:     Uvicorn running on http://0.0.0.0:8787 (Press CTRL+C to quit)
-INFO:     Started reloader process [92780] using WatchFiles
+INFO:     Started reloader process [37850] using WatchFiles
 🚀 启动大语言模型资源预估API服务器...
 📝 API文档地址: http://localhost:8000/docs
 🔍 健康检查: http://localhost:8000/health
 ⚡ 停止服务器: Ctrl+C
-INFO:     Started server process [92782]
+INFO:     Started server process [37854]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:62250 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62285 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62287 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62292 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51691 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51722 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51724 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51731 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51795 - "POST /api/v1/inference/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51814 - "POST /api/v1/inference/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "POST /api/v1/inference/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51892 - "POST /api/v1/inference/estimate HTTP/1.1" 200 OK
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [92782]
-INFO:     Stopping reloader process [92780]
+INFO:     Finished server process [37854]
+INFO:     Stopping reloader process [37850]

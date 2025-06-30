@@ -1,168 +1,146 @@
-# 大语言模型训练与推理资源预估系统
+# 🚀 大语言模型训练与推理资源预估系统
 
-> 🚀 专业的大语言模型资源预估工具，精准计算训练与推理所需的硬件资源
+> 专业的LLM资源预估工具，精准计算训练与推理硬件需求，助力AI项目高效部署
 
 ## 📋 项目概述
 
-该系统是一个专门用于预估大语言模型（LLM）训练和推理阶段资源消耗的Web应用程序。通过精确的算法计算，帮助用户在部署模型前准确评估所需的硬件资源，特别是GPU显存需求，避免资源配置不当导致的部署失败或资源浪费。
+这是一个专门用于预估大语言模型（LLM）训练和推理阶段资源消耗的Web应用。通过精确的数学模型和算法，帮助用户在模型部署前准确评估GPU显存、内存等硬件资源需求，避免配置不当导致的部署失败或资源浪费。
 
-**⚠️ 重要说明：本系统仅提供资源预估功能，不涉及实际的模型训练或推理过程。**
+**💡 核心价值：让AI资源配置有据可依，降低试错成本**
 
 ## ✨ 核心功能
 
 ### 🎯 训练资源预估
-- **模型参数配置**
-  - 支持主流模型参数规模（1B - 1000B+）
-  - 自定义模型架构参数（层数、隐藏层维度、注意力头数等）
-  - 词汇表大小配置
-
-- **训练方式选择**
+- **训练方法支持**
   - 全参数微调（Full Fine-tuning）
-  - LoRA（Low-Rank Adaptation）
-  - QLoRA（Quantized LoRA）
-  - AdaLoRA（Adaptive LoRA）
-  - DoRA（Weight-Decomposed LoRA）
+  - LoRA微调（Low-Rank Adaptation）
+  - 动态LoRA参数配置（rank: 8-128, alpha: 16-128）
 
-- **训练阶段配置**
-  - 预训练（Pre-training）
-  - 监督微调（SFT - Supervised Fine-tuning）
-  - 人类反馈强化学习（RLHF）
-  - 直接偏好优化（DPO及其变体：ORPO、CPO、KTO等）
+- **精确显存计算**
+  - 模型权重：支持不同精度（FP32/FP16/BF16）
+  - 激活值：考虑梯度检查点、Flash Attention 2、Unsloth等优化
+  - 优化器状态：AdamW、Adam、SGD的内存倍数
+  - 梯度缓存：全参数 vs LoRA的区别
+  - 框架开销：PyTorch、DeepSpeed等固定开销
 
-- **训练参数设置**
-  - Batch Size（单卡及全局）
-  - 序列长度（Max Tokens）
-  - 梯度累积步数
-  - 混合精度训练配置（fp16/bf16/fp32）
-  - DeepSpeed ZeRO阶段选择
+- **高级配置**
+  - DeepSpeed ZeRO Stage 0-3 分片策略
+  - 多种加速方法（Flash Attention 2、Unsloth）
+  - 灵活的并行策略配置
 
 ### 🔍 推理资源预估
 - **推理后端支持**
   - vLLM（高性能推理引擎）
   - PyTorch原生推理
-  - Transformers库推理
+  - Transformers库
   - TensorRT-LLM
   - FastChat
   - Text Generation Inference (TGI)
 
-- **推理配置选项**
-  - 批处理大小（Batch Size）
-  - 最大序列长度
-  - KV Cache配置
-  - 量化方案（INT8/INT4/GPTQ/AWQ等）
-  - 多GPU并行策略
+- **精准性能预估**
+  - KV Cache动态计算（基于序列长度）
+  - 量化方案支持（INT8/INT4/GPTQ/AWQ）
+  - 吞吐量和延迟预估
+  - 最大并发请求数分析
 
-### 📊 详细资源分析
-- **显存消耗细分**
-  - 模型权重占用
-  - 激活值内存
-  - 优化器状态（仅训练）
-  - 梯度缓存（仅训练）
-  - KV Cache（仅推理）
-  - 框架开销
-
-- **性能预估**
-  - 理论计算量（FLOPs）
-  - 内存带宽需求
-  - 推荐的GPU型号和数量
-  - 预估的训练时间/推理吞吐量
+### 🎓 显存分解详解 **(新功能)**
+每个显存组件都提供详细的计算公式帮助说明：
+- **模型权重**：LoRA参数计算公式、不同精度的内存占用
+- **激活值**：基础激活值和注意力激活值的计算方法
+- **优化器状态**：不同优化器的内存倍数和DeepSpeed分片影响
+- **梯度**：全参数 vs LoRA的梯度内存差异
+- **框架开销**：各种深度学习框架的固定开销
 
 ## 🏗️ 技术架构
 
 ### 后端技术栈
-- **框架**: FastAPI
+- **框架**: FastAPI + Uvicorn
 - **语言**: Python 3.8+
-- **核心库**: 
-  - NumPy（数值计算）
-  - Pandas（数据处理）
-  - Pydantic（数据验证）
-  - Uvicorn（ASGI服务器）
+- **核心库**: NumPy, Pydantic
+- **特色**: 基于GPU硬件数据库的智能推荐算法
 
 ### 前端技术栈
-- **框架**: Next.js 14+
-- **语言**: TypeScript
-- **UI组件**: 
-  - React
-  - Tailwind CSS
-  - shadcn/ui
+- **框架**: Next.js 14 + TypeScript
+- **UI库**: Tailwind CSS + shadcn/ui
 - **状态管理**: Zustand
-- **图表可视化**: Chart.js / ECharts
+- **特色**: 交互式帮助系统，1秒延迟显示专业解释
 
 ### 项目结构
 ```
-大模型训练推理估算小程序/
+LLM-device/
 ├── core/
-│   ├── backend/           # FastAPI后端服务
+│   ├── backend/                    # FastAPI后端服务
 │   │   ├── app/
-│   │   │   ├── api/       # API路由
-│   │   │   │   ├── models/    # 数据模型
-│   │   │   │   ├── services/  # 业务逻辑
-│   │   │   │   └── utils/     # 工具函数
-│   │   │   └── requirements.txt
-│   │   └── main.py
-│   └── front/             # Next.js前端应用
-│       ├── src/
-│       │   ├── components/ # React组件
-│       │   │   ├── pages/     # 页面文件
-│       │   │   ├── hooks/     # 自定义Hook
-│       │   │   └── utils/     # 工具函数
-│       │   ├── package.json
-│       │   └── next.config.js
-│   ├── docs/                  # 文档目录
-│   ├── tests/                 # 测试文件
-│   └── README.md
-└── developer.md
+│   │   │   ├── api/v1/endpoints/  # API端点
+│   │   │   ├── models/            # 数据模型
+│   │   │   ├── services/calculator/ # 核心计算引擎
+│   │   │   └── utils/             # 工具函数
+│   │   └── requirements.txt
+│   ├── front/                     # Next.js前端应用
+│   │   ├── src/
+│   │   │   ├── app/              # App Router页面
+│   │   │   ├── components/       # React组件
+│   │   │   ├── store/            # Zustand状态管理
+│   │   │   └── types/            # TypeScript类型
+│   │   └── package.json
+│   └── gpu-data/                  # GPU硬件数据库
+├── developer.md                   # 开发文档
+├── start.sh                      # 一键启动脚本
+└── stop.sh                       # 一键停止脚本
 ```
 
 ## 🎯 使用场景
 
-- **AI研究团队**: 在开始训练前评估硬件需求，合理分配资源
-- **企业AI部门**: 为模型部署制定硬件采购计划
-- **云服务提供商**: 为客户提供准确的资源配置建议
-- **个人开发者**: 在有限的硬件条件下选择合适的模型规模和配置
+- **AI研究团队**: 训练前评估硬件需求，优化资源配置
+- **企业AI部门**: 制定模型部署的硬件采购计划
+- **云服务商**: 为客户提供精准的资源配置建议
+- **个人开发者**: 在有限硬件下选择最适合的训练配置
 
-## 🔧 支持的模型类型
+## 📊 GPU硬件支持
 
-- **Transformer架构**: GPT系列、LLaMA、Qwen、ChatGLM、Baichuan等
-- **参数规模**: 0.1B - 1000B+
-- **精度支持**: FP32、FP16、BF16、INT8、INT4
-- **并行策略**: 数据并行、模型并行、流水线并行
+**支持的GPU型号**:
+- **NVIDIA H系列**: H100-80GB, H800等
+- **NVIDIA A系列**: A100-40GB/80GB, A6000等  
+- **NVIDIA RTX系列**: RTX4090, RTX3090, RTX4080等
+- **NVIDIA V系列**: V100-16GB/32GB
+- **其他**: L20, L40S等
 
-## 📈 输出结果示例
+**智能推荐算法**: 基于算力效率和性价比的GPU配置优化建议
 
-### 训练资源预估结果
+## 📈 实际使用示例
+
+### 训练资源预估
 ```
-模型: LLaMA-7B (全参数微调)
-序列长度: 2048
-批处理大小: 4 (per device)
+模型: 7B参数 (LoRA rank=16)
+配置: batch_size=4, seq_len=2048, fp16
+优化: 梯度检查点 + Flash Attention 2
 
-显存消耗详情:
-├── 模型权重: 13.5 GB
-├── 优化器状态: 27.0 GB (AdamW)
-├── 梯度缓存: 13.5 GB
-├── 激活值: 8.2 GB
-└── 框架开销: 2.8 GB
-────────────────────
-总计: 65.0 GB
+显存分解:
+├── 模型权重: 13.09 GB (包含LoRA参数)
+├── 激活值: 10.20 GB (已优化)
+├── 优化器状态: 0.11 GB (仅LoRA参数)
+├── 梯度: 0.05 GB (仅LoRA参数)  
+└── 框架开销: 1.50 GB
+────────────────────────────────
+总计: 24.96 GB
 
-推荐配置: 4 × A100 (80GB) 或 8 × RTX 4090 (24GB)
+推荐: 1 × RTX4090 (24GB) 或 H100-80GB
 ```
 
-### 推理资源预估结果
+### 推理资源预估  
 ```
-模型: LLaMA-13B (vLLM后端)
-最大序列长度: 4096
-批处理大小: 32
+模型: 13B参数 (vLLM, FP16)
+配置: max_seq_len=4096, batch_size=8
 
-显存消耗详情:
-├── 模型权重: 24.6 GB (FP16)
+显存分解:
+├── 模型权重: 24.6 GB
 ├── KV Cache: 16.8 GB
-└── 框架开销: 3.6 GB
+└── 后端开销: 3.6 GB
 ────────────────────
 总计: 45.0 GB
 
-推荐配置: 1 × A100 (80GB) 或 2 × RTX 4090 (24GB)
-预估吞吐量: ~35 tokens/sec
+推荐: 1 × A100-80GB
+预估吞吐量: ~1,200 tokens/sec
 ```
 
 ## 🚀 快速启动
@@ -173,63 +151,68 @@
 git clone <repository-url>
 cd LLM-device
 
-# 一键启动所有服务
+# 一键启动前后端服务
 ./start.sh
 
-# 停止所有服务
+# 停止所有服务  
 ./stop.sh
+
+# 开发模式（前台运行，实时日志）
+./dev.sh
 ```
 
-### 内网访问配置
+### 访问地址
+启动后可通过以下地址访问：
+- **前端应用**: http://localhost:3000
+- **后端API**: http://localhost:8787  
+- **API文档**: http://localhost:8787/docs
 
-系统默认支持内网访问，启动后会自动显示内网IP地址。
+### 内网访问
+系统自动支持内网访问，启动时会显示内网IP。如需自定义配置：
 
-#### 自动配置（推荐）
-使用 `./start.sh` 启动后，系统会自动检测并显示内网访问地址：
-- 本机访问: http://localhost:3000
-- 内网访问: http://YOUR_IP:3000
-
-#### 手动配置
-如需手动指定后端地址，可以：
-
-1. **复制环境变量文件**：
 ```bash
 cd core/front
 cp env.example .env.local
+# 编辑 .env.local 设置 BACKEND_HOST
 ```
 
-2. **编辑配置文件**：
-```bash
-# .env.local
-BACKEND_HOST=192.168.1.100  # 替换为实际的内网IP
-BACKEND_PORT=8787
-```
+## 🔧 开发环境
 
-3. **重启前端服务**：
+### 环境要求
+- **Python**: 3.8+ (推荐使用uv管理依赖)
+- **Node.js**: 18+
+- **操作系统**: macOS/Linux/Windows
+
+### 分别启动服务
 ```bash
+# 后端开发
+cd core/backend  
+python run_server.py
+
+# 前端开发
 cd core/front
 npm run dev
 ```
 
-#### 防火墙配置
-确保防火墙允许以下端口：
-- **3000**: 前端服务
-- **8787**: 后端API服务
+## 🌟 最新更新 (v2.2)
 
-**macOS**:
-```bash
-# 允许端口访问（如果需要）
-sudo pfctl -f /etc/pf.conf
-```
+- ✅ **显存分解帮助系统**: 悬停查看每个组件的详细计算公式
+- ✅ **LoRA参数配置**: 动态rank和alpha选择，精确计算LoRA参数量
+- ✅ **用户体验优化**: 智能提示、参数验证、错误处理
+- ✅ **GPU数据库**: 基于JSON的硬件数据，支持最新GPU型号
+- ✅ **计算精度提升**: 基于实际参数量的精确显存计算
 
-**Linux (Ubuntu)**:
-```bash
-sudo ufw allow 3000
-sudo ufw allow 8787
-```
+## 📚 相关文档
 
-**Windows**:
-在Windows防火墙中添加入站规则，允许端口3000和8787。
+- **开发文档**: `developer.md` - 详细的开发指南和API文档
+- **启动指南**: `STARTUP.md` - 详细的启动和配置说明
+- **更新日志**: 查看`developer.md`中的更新记录
 
-### 开发模式启动
+## ⚠️ 重要说明
+
+本系统仅提供**资源预估功能**，不涉及实际的模型训练或推理。预估结果基于理论计算和经验公式，实际使用中可能因环境差异存在5-15%的误差，建议预留10-20%的资源余量。
+
+---
+
+**项目状态**: 🟢 生产就绪 | **最后更新**: 2024-12-19 | **版本**: v2.2
 
