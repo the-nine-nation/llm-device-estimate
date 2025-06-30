@@ -10,14 +10,13 @@
  ⚠ Invalid next.config.js options detected: 
  ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
  ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
- ✓ Ready in 3.2s
+ ✓ Ready in 1562ms
  ○ Compiling / ...
- ✓ Compiled / in 857ms (573 modules)
- GET / 200 in 956ms
- ✓ Compiled in 125ms (285 modules)
- GET / 200 in 41ms
- ✓ Compiled /training in 319ms (763 modules)
-(node:37900) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+ ✓ Compiled / in 763ms (562 modules)
+ GET / 200 in 855ms
+ ✓ Compiled in 109ms (280 modules)
+ GET / 200 in 28ms
+ ✓ Compiled /training in 413ms (762 modules)
+(node:51112) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
- ✓ Compiled /inference in 211ms (787 modules)
 [?25h

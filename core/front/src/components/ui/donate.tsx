@@ -27,15 +27,15 @@ export function Donate({ className, compact = false }: DonateProps) {
         </Button>
         
         {isExpanded && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full relative">
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600"
-              >
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4 overflow-y-auto">
+            <div className="bg-white rounded-lg p-4 max-w-sm w-full relative max-h-[90vh] overflow-y-auto my-auto">
+                              <button
+                  onClick={() => setIsExpanded(false)}
+                  className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600 z-[10000] bg-white rounded-full shadow-sm"
+                >
                 <X className="w-5 h-5" />
               </button>
-              <DonateCard />
+              <DonateCard compact={true} />
             </div>
           </div>
         )}
@@ -50,30 +50,32 @@ export function Donate({ className, compact = false }: DonateProps) {
   )
 }
 
-function DonateCard() {
+function DonateCard({ compact: isCompactModal = false }: { compact?: boolean }) {
   return (
     <Card className="border-pink-200 bg-gradient-to-br from-pink-50 to-rose-50">
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="flex items-center justify-center gap-2 text-pink-700">
-          <Coffee className="w-5 h-5" />
+      <CardHeader className={`text-center ${isCompactModal ? 'pb-2' : 'pb-4'}`}>
+        <CardTitle className={`flex items-center justify-center gap-2 text-pink-700 ${isCompactModal ? 'text-lg' : ''}`}>
+          <Coffee className={`${isCompactModal ? 'w-4 h-4' : 'w-5 h-5'}`} />
           请开发者喝杯咖啡
         </CardTitle>
-        <p className="text-sm text-gray-600 mt-2">
+        <p className={`text-gray-600 ${isCompactModal ? 'text-xs mt-1' : 'text-sm mt-2'}`}>
           如果这个工具对您有帮助，欢迎赞赏支持 ☕
         </p>
       </CardHeader>
-      <CardContent className="text-center space-y-4">
+      <CardContent className={`text-center ${isCompactModal ? 'space-y-2' : 'space-y-4'}`}>
         <div className="relative inline-block">
           <img
             src="/donate.png"
             alt="赞赏码"
-            className="w-48 h-48 mx-auto rounded-lg shadow-md border border-gray-200"
+            className={`mx-auto rounded-lg shadow-md border border-gray-200 ${
+              isCompactModal ? 'w-36 h-36' : 'w-48 h-48'
+            }`}
           />
           <div className="absolute -bottom-1 -right-1 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
             微信/支付宝
           </div>
         </div>
-        <div className="space-y-2">
+        <div className={isCompactModal ? 'space-y-1' : 'space-y-2'}>
           <p className="text-xs text-gray-500">
             扫描二维码，选择金额随心赞赏
           </p>

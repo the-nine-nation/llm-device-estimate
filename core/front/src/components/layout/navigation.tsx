@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Donate } from '@/components/ui/donate'
 import { Calculator, Cpu, Github, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
@@ -66,7 +65,6 @@ export function Navigation() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <Donate compact className="hidden lg:block" />
             <Button variant="ghost" size="sm" asChild>
               <Link
                 href="https://github.com/your-repo/llm-resource-estimation"

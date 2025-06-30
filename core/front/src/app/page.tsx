@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Donate } from '@/components/ui/donate'
 import { Calculator, Cpu, Zap, BarChart3 } from 'lucide-react'
 
 export default function HomePage() {
@@ -149,15 +148,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 赞赏支持 */}
-      <section className="py-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-muted-foreground mb-4">
-            如果这个工具对您有帮助，欢迎支持开发者 ☕
-          </p>
-          <Donate compact />
-        </div>
-      </section>
     </div>
   )
 } 
