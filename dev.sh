@@ -69,10 +69,10 @@ cleanup_ports() {
         lsof -ti :8787 | xargs kill -9 2>/dev/null || true
     fi
     
-    # 清理3000端口
-    if lsof -i :3000 >/dev/null 2>&1; then
-        print_warning "清理端口 3000..."
-        lsof -ti :3000 | xargs kill -9 2>/dev/null || true
+    # 清理8786端口
+    if lsof -i :8786 >/dev/null 2>&1; then
+        print_warning "清理端口 8786..."
+        lsof -ti :8786 | xargs kill -9 2>/dev/null || true
     fi
     
     sleep 2
@@ -111,7 +111,7 @@ start_frontend() {
     fi
     
     print_success "前端将在前台运行，支持热重载"
-    print_success "前端地址: http://localhost:3000"
+    print_success "前端地址: http://localhost:8786"
     echo ""
     
     # 前台运行前端
@@ -153,7 +153,7 @@ start_parallel() {
     echo ""
     print_success "🎉 开发环境启动完成！"
     echo ""
-    echo -e "${CYAN}📱 前端界面:${NC} http://localhost:3000"
+    echo -e "${CYAN}📱 前端界面:${NC} http://localhost:8786"
     echo -e "${CYAN}🚀 后端API:${NC}  http://localhost:8787"
     echo -e "${CYAN}📚 API文档:${NC}  http://localhost:8787/docs"
     echo ""

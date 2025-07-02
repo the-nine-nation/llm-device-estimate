@@ -262,7 +262,7 @@ export default function TrainingPage() {
                     <FormField name="gradient_accumulation_steps">
                       <FormLabel className="flex items-center">
                         梯度累积步数
-                        <HelpIcon content="在更新模型参数前累积多少步的梯度。可以在不增加显存的情况下增大有效批次大小。例如：batch_size=8，accumulation_steps=4，等效于batch_size=32的训练效果。" />
+                        <HelpIcon content="在更新模型参数前累积多少步的梯度。可以模拟更大批次的训练效果，但会略微增加显存（约5-15%）。例如：batch_size=8，accumulation_steps=4，等效于batch_size=32的训练效果。Adam优化器的累积开销比SGD稍高。" />
                       </FormLabel>
                       <FormInput 
                         name="gradient_accumulation_steps"

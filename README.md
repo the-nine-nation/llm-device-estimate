@@ -163,7 +163,7 @@ cd LLM-device
 
 ### 访问地址
 启动后可通过以下地址访问：
-- **前端应用**: http://localhost:3000
+- **前端应用**: http://localhost:8786
 - **后端API**: http://localhost:8787  
 - **API文档**: http://localhost:8787/docs
 

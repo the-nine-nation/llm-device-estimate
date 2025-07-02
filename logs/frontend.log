@@ -10,13 +10,16 @@
  ⚠ Invalid next.config.js options detected: 
  ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
  ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
- ✓ Ready in 1562ms
+ ✓ Ready in 2.5s
  ○ Compiling / ...
- ✓ Compiled / in 763ms (562 modules)
- GET / 200 in 855ms
- ✓ Compiled in 109ms (280 modules)
- GET / 200 in 28ms
- ✓ Compiled /training in 413ms (762 modules)
-(node:51112) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+ ✓ Compiled / in 885ms (562 modules)
+ GET / 200 in 988ms
+ ✓ Compiled in 117ms (280 modules)
+ ✓ Compiled /training in 316ms (762 modules)
+ GET /training 200 in 402ms
+ ⚠ Cross origin request detected from 172.27.100.132 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+(node:29412) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
+ ✓ Compiled in 293ms (756 modules)
 [?25h

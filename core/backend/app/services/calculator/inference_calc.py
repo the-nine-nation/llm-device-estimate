@@ -147,16 +147,31 @@ class InferenceCalculator(BaseCalculator):
         return self.convert_bytes(kv_cache_size)
     
     def _calculate_activation_memory(self, model: ModelInfo, request: InferenceRequest) -> float:
-        """计算激活值显存（推理时相对较小）"""
+        """计算激活值显存"""
         bytes_per_element = self.PRECISION_BYTES[request.precision]
         
-        # 推理时的激活值主要是当前batch的计算缓存
-        # 考虑总序列长度（输入 + 输出）
+        # 计算总序列长度（输入 + 输出）
         total_sequence_length = request.max_sequence_length + request.max_new_tokens
-        activation_size = (request.max_batch_size * total_sequence_length * 
-                         model.hidden_size * bytes_per_element)
         
-        return self.convert_bytes(activation_size)
+        # 基础激活值：包含所有Transformer层的激活值
+        # 推理时虽然是单向计算，但仍需要存储每层的激活值用于后续计算
+        activation_size = (request.max_batch_size * total_sequence_length * 
+                         model.hidden_size * model.num_layers * bytes_per_element)
+        
+        # 注意力机制的激活值（Q, K, V矩阵）
+        # 推理时注意力计算同样产生O(n²)的中间结果
+        attention_size = (request.max_batch_size * model.num_heads * 
+                        total_sequence_length * total_sequence_length * 
+                        bytes_per_element * model.num_layers)
+        
+        total_bytes = activation_size + attention_size
+        
+        # 推理时通常不使用梯度检查点，但可能有其他优化
+        # 注意：推理的激活值通常比训练小，因为不需要保存用于反向传播的中间结果
+        # 这里我们使用一个保守的折扣因子
+        total_bytes *= 0.6  # 推理时激活值约为训练时的60%
+        
+        return self.convert_bytes(total_bytes)
     
     def _calculate_max_concurrent_requests(self, model: ModelInfo, request: InferenceRequest, 
                                          kv_cache_memory: float) -> int:

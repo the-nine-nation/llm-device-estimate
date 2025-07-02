@@ -105,7 +105,7 @@ main() {
     # 停止前端服务
     print_status "停止前端服务..."
     stop_service_by_pid "前端" "logs/frontend.pid"
-    stop_service_by_port "前端" "3000"
+    stop_service_by_port "前端" "8786"
     
     # 清理日志文件（可选）
     if [ "$1" = "--clean" ] || [ "$1" = "-c" ]; then

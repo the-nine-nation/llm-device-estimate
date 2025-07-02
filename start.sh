@@ -75,10 +75,10 @@ check_ports() {
         sleep 2
     fi
     
-    # 检查前端端口 3000
-    if lsof -i :3000 >/dev/null 2>&1; then
-        print_warning "端口 3000 已被占用，将尝试终止占用进程"
-        lsof -ti :3000 | xargs kill -9 2>/dev/null || true
+    # 检查前端端口 8786
+    if lsof -i :8786 >/dev/null 2>&1; then
+        print_warning "端口 8786 已被占用，将尝试终止占用进程"
+        lsof -ti :8786 | xargs kill -9 2>/dev/null || true
         sleep 2
     fi
     
@@ -154,9 +154,9 @@ start_frontend() {
     # 等待前端启动
     print_status "等待前端服务启动..."
     for i in {1..30}; do
-        if curl -s http://localhost:3000 >/dev/null 2>&1; then
+        if curl -s http://localhost:8786 >/dev/null 2>&1; then
             print_success "前端服务启动成功 (PID: $FRONTEND_PID)"
-            print_success "前端地址: http://localhost:3000"
+            print_success "前端地址: http://localhost:8786"
             return 0
         fi
         sleep 2
@@ -211,12 +211,12 @@ show_startup_info() {
     print_success "🎉 系统启动完成！"
     echo ""
     echo -e "${CYAN}📱 本机访问:${NC}"
-    echo -e "   前端界面: http://localhost:3000"
+    echo -e "   前端界面: http://localhost:8786"
     echo -e "   后端API:  http://localhost:8787"
     echo ""
     if [ -n "$local_ip" ]; then
         echo -e "${GREEN}🌐 内网访问:${NC}"
-        echo -e "   前端界面: http://${local_ip}:3000"
+        echo -e "   前端界面: http://${local_ip}:8786"
         echo -e "   后端API:  http://${local_ip}:8787"
         echo ""
     fi
@@ -231,9 +231,9 @@ show_startup_info() {
     echo -e "   运行: ./stop.sh 或 npm run stop"
     echo ""
     echo -e "${PURPLE}🎯 开始使用:${NC}"
-    echo -e "   1. 打开浏览器访问 http://localhost:3000"
+    echo -e "   1. 打开浏览器访问 http://localhost:8786"
     if [ -n "$local_ip" ]; then
-        echo -e "   2. 内网用户访问 http://${local_ip}:3000"
+        echo -e "   2. 内网用户访问 http://${local_ip}:8786"
         echo -e "   3. 进入训练预估页面"
         echo -e "   4. 选择模型和配置参数"
         echo -e "   5. 点击开始预估查看结果"

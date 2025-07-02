@@ -94,7 +94,7 @@ npm run setup
 
 启动成功后，可以通过以下地址访问：
 
-- **前端界面**: http://localhost:3000
+- **前端界面**: http://localhost:8786
 - **后端API**: http://localhost:8787
 - **API文档**: http://localhost:8787/docs
 - **健康检查**: http://localhost:8787/health
@@ -120,7 +120,7 @@ npm run setup
 ```bash
 # 手动清理端口
 lsof -ti :8787 | xargs kill -9  # 后端端口
-lsof -ti :3000 | xargs kill -9  # 前端端口
+lsof -ti :8786 | xargs kill -9  # 前端端口
 ```
 
 ### 依赖问题

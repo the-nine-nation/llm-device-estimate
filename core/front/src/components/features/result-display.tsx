@@ -124,6 +124,9 @@ export function MemoryBreakdown({ breakdown, total }: MemoryBreakdownProps) {
                 backend_overhead: '后端开销'
               }[name] || name
 
+              // 自动检测场景：如果包含optimizer_states或gradients，则为训练场景
+              const isTrainingMode = breakdown.hasOwnProperty('optimizer_states') || breakdown.hasOwnProperty('gradients')
+              
               // 为每个组件定义详细的计算公式说明
               const helpContent = {
                 model_weights: `
@@ -138,18 +141,31 @@ export function MemoryBreakdown({ breakdown, total }: MemoryBreakdownProps) {
 
 例如：7B模型 FP16 = 7,000,000,000 × 2字节 = 14GB
                 `,
-                activations: `
-激活值显存计算公式：
+                activations: isTrainingMode ? `
+训练激活值显存计算公式：
 • 基础激活值 = batch_size × seq_len × hidden_size × num_layers × bytes_per_element
 • 注意力激活值 = batch_size × num_heads × seq_len² × num_layers × bytes_per_element
 
-优化技术影响：
+训练优化技术影响：
 - 梯度检查点：减少70%激活值显存
 - Flash Attention 2：减少30%-60%注意力内存
 - Unsloth：减少75%激活值显存
 
 例如：batch=8, seq=2048, hidden=4096, layers=32, FP16
 基础：8×2048×4096×32×2 = 4.3GB
+                ` : `
+推理激活值显存计算公式：
+• 基础激活值 = batch_size × seq_len × hidden_size × num_layers × bytes_per_element
+• 注意力激活值 = batch_size × num_heads × seq_len² × num_layers × bytes_per_element
+
+推理特点：
+- 序列长度 = 输入长度 + 最大输出长度
+- 不需要保存反向传播的中间结果，显存约为训练时的60%
+- 通常不使用梯度检查点等训练优化技术
+- 主要依赖KV Cache来避免重复计算
+
+例如：batch=1, seq=2048, hidden=4096, layers=32, FP16
+推理激活值 ≈ 训练激活值 × 0.6
                 `,
                 optimizer_states: `
 优化器状态显存计算公式：

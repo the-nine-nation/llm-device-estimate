@@ -1,19 +1,32 @@
 INFO:     Will watch for changes in these directories: ['/Volumes/AppData/guanan/Item/LLM-device/core/backend']
 INFO:     Uvicorn running on http://0.0.0.0:8787 (Press CTRL+C to quit)
-INFO:     Started reloader process [51060] using WatchFiles
+INFO:     Started reloader process [29362] using WatchFiles
 🚀 启动大语言模型资源预估API服务器...
 📝 API文档地址: http://localhost:8000/docs
 🔍 健康检查: http://localhost:8000/health
 ⚡ 停止服务器: Ctrl+C
-INFO:     Started server process [51062]
+INFO:     Started server process [29364]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:50539 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50661 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50663 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50672 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65389 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65498 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65500 - "GET /api/v1/training/configs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65520 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65535 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49173 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49177 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49182 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49197 - "POST /api/v1/training/estimate HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/services/calculator/training_calc.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [51062]
-INFO:     Stopping reloader process [51060]
+INFO:     Finished server process [29364]
+INFO:     Started server process [30270]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [30270]
+INFO:     Stopping reloader process [29362]
